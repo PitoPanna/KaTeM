@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KáTéM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="assets/images/logo1.png" alt="KáTéM Logó" class="logo">
+            </div>
+            <nav>
+                <div class="nav-links">
+                    <button class="nav-btn active" data-target="koszonto">Kezdőlap</button>
+                    <button class="nav-btn" data-target="miert-katem">Miért KáTéM?</button>
+                    <button class="nav-btn" data-target="tortenet">A KáTéM története</button>
+                    <button class="nav-btn" data-target="modszertan">A KáTéM módszertanáról</button>
+                    <button class="nav-btn" data-target="anyagok">A KéTéM anyag bemutatása</button>
+                    <button class="nav-btn" data-target="probaldkid">Próbáld ki!</button>
+                    <button class="nav-btn" data-target="esemenyek">Események</button>
+                    <button class="nav-btn" data-target="galeria">Galéria</button>
+                    <button class="nav-btn" data-target="kapcsolat">Kapcsolat</button>
+                  
+                    <button class="nav-btn admin-only-btn" id="adminNavBtn" data-target="admin" style="display: none;">⚙️ Adminisztráció</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content-area">
+
+        <!-- Welcome page -->
+        <section id="koszonto" class="tab-content active">
+            <div class="welcome-hero">
+                <img src="assets/images/logo.png" alt="KáTéM Nagy Logó" class="welcome-logo-large">
+                <h2>Isten hozott a KáTéM Hivatalos Oldalán!</h2>
+                <blockquote class="bible-quote">
+                    „Tanítsd a gyermeket, mely úton járjon: még ha megöregszik, akkor sem távolodik el attól.”
+                    <cite>Péld 22,6</cite>
+                </blockquote>
+            </div>
+            
+            <div class="upcoming-events-preview">
+                <h3>📌 Közelgő eseményeink</h3>
+                <div id="homeEventsList" class="events-grid">
+                    <p class="loading-text">Események betöltése...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Miért KáTéM? -->
+        <section id="miert-katem" class="tab-content">
+            <h2>Miért KáTéM?</h2>
+            <p>
+                Az Ige és a hitvallás nem változik. A körülöttünk levő világ és a benne felnővő gyerekeink azonban nagyon. 
+                A konfirmációs felkészítők témái és az alkalmazott módszerek így állandó újragondolásra szorulnak. Hogyan beszéljünk úgy a mai fiataloknak az Isten szerinti életről, hogy az változást hozzon életükbe, és beépüljenek gyülekezeteinkbe?
+                A KáTéM erre a kérdésre adott válasz. Egyszerre módszer és több évre kidolgozott anyag a hit alapkérdéseiről a Heidelbergi Káté alapján.
+            </p>
+        </section>
+
+        <!-- 3. Történet -->
+        <section id="tortenet" class="tab-content">
+            <h2>A KáTéM története</h2>
+            <p>
+                12 éve, 2014-ben indultunk el ezen az úton. Többször újraterveztünk útközben.
+                Az akkori kezdeményezők megnézték a Hollandiában akkor használt felkészítő anyagokat. Úgy látták, nálunk valami másra van szükség. A Hulp Oost Europa Alapítvány felkarolta a kezdeményezést. Szakembereket (dr. Bernard van Vreeswijk és Herman van Wijngarden) vontak be a munkába, akik megértve az erdélyi magyar igényeket és a Heidelbergi Kátéhoz való ragaszkodást, saját, a hollandiai ifjúsági munkában (HGJB) szerzett tapasztalataikat is hasznosítva kidolgoztak számunkra egy módszert és egy tantervet. Ez is többször módosult az évek során.
+                Az óraterveket a Kolozsvári Protestáns Teológiai Intézet diákjai írták dr. Kiss Jenő felügyelete alatt dr. Somfalvi Edit tanárnő szakmai irányításával. A lecketervek javítására a módszert kidolgozó szakemberek egy munkacsoportot hoztak létre, amelyben az elmúlt évek során sokan önkénteskedtek. Az óratervek véglegesítésébe egy másik önkéntes csoport is bekapcsolódott. Itt figyelembe vették a gyakorlati tapasztalatokat is.
+                A módszert és az anyagot megismerhették a kolozsvári Protestáns Teológiai Intézet utóbbi 5 évének végzősei, azok az lelkipásztorok, akik részt vettek a Romániai Református Egyház Országos Lelkésztovábbképző Testület elmúlt néhány évben szervezett továbbképzésein, illetve valamelyik bemutatónapon. Magyarországon és Délvidéken is voltak már ilyen bemutatónapok.
+                Hálásak vagyunk Istennek ezért a történetért! Legyen a folyatáson is az ő áldása!
+            </p>
+        </section>
+
+        <!-- 4. Módszertan -->
+        <section id="modszertan" class="tab-content">
+            <h2>A KáTéM módszertanáról</h2>
+            <p>
+                A KáTéM egyszerre Krisztusközpontú és gyerekközpontú. Célja, hogy a gyerekek Krisztussal kerüljenek kapcsolatba, megszeressék őt, és vele éljenek.
+                Ennek érdekében a sorra kerülő témák egy ívet követnek. A KáTéM nem a kátékérdéseket veszi sorra, hanem a lelki növekedés témáihoz kapcsol egy-egy kátékérdést. Ezáltal a tanítás során „felborul” a kérdések és válaszok eddigi sorrendje. Természetesen így is hiteles összefoglalója a Heidelbergi Káté tanításának.
+                Minden órának saját fókusza van, ehhez társít az óraterv egy igét és egy (néha két) kátékérdést és választ. Ami az órán történik, ennek a fókusznak rendeli alá. A kátéválaszoknak így csak azon elemét, elemeit bontja ki, amik a fókuszra néznek. Meggyőződésünk, hogy a fiatalok jobban megjegyzik ezt az egy üzenetet, mintha a válasz minden elemére figyelniük kellene.
+
+                A módszer a személyiség mindhárom rétegét (értelem, érzelem, akarat) érinti és bevonja.
+                Gyakorlatias, megszólaltatja és bevonja a fiatalokat. Az, ahogyan a bibliai részt együtt olvassuk és beszélgetünk róla, arra bátorítja őket, hogy ők is elkezdjenek igét olvasni, s abban Isten üzenetét megkeresni.
+                A bevezető beszélgetés vagy foglalkozás célja, hogy a csoportvezető megismerje, hogyan gondolkoznak a csapat tagjai a témáról. Ez segít neki abban, hogy csatlakozni tudjon hozzájuk, és közel vigye hozzájuk az aznapi témát.
+                Minden óra egy alkalmazó gyakorlattal zárul, mely során a fiatalok végiggondolják, mit jelent az aznapi tanítás gyakorlatba ültetése, és milyen változást hoz ez az életükbe.
+                Aki szeretné jobban megismerni a KáTéM módszertanát, szeretettel hívjuk képzéseinkre! Szívesen szervezünk bemutatónapot, ahol erre igény van! Ezekről érdeklődni, az igényt jelezni munkatársainknál lehet, akik elérhetőségét a Kapcsolat címszó alatt találjátok. Várjuk javaslataitokat is!
+            </p>
+        </section>
+
+        <!-- 5. Anyagok -->
+        <section id="anyagok" class="tab-content">
+            <h2>A KéTéM anyag bemutatása</h2>
+            <p>
+                A KáTéM 5 év anyagát készíti elő. Munkatársaink most is dolgoznak.
+                Az első két év -a konfirmációs előkészítő időszak- a bevezetésről, alapozásról szól. Az azt követő három év anyaga a tanítványságban való elmélyülést szolgálja. Ez utóbbi 3 éves anyag a konfirmáció utáni ifis korosztálynak készül.
+                Az első év („kiskátés” időszak) 26, a második („nagykátés” év) 17 óratervet tartalmaz, így lehetővé teszi az anyag átvételét a virágvasárnapi konfirmáció előtt. Az első év 13. alkalma után egy ismétlő órát képzeltünk el, ezért ugrik egyet a számozás. Nincs 14. lecke, és a számozás 27-ig megy. <a href="https://docs.google.com/document/d/1x8yaaFT2MiugJXR8-Mg8IpCVPm-IdrRX/edit?usp=sharing&ouid=100098610876078066576&rtpof=true&sd=true" target="_blank">Itt találod meg a kérdésválogatást.</a>
+                Az óratervek 2 részből állnak:
+                I. az óra előkészítése - a csoportvezető otthoni felkészülését segíti. Ez tartalmazza a kátékérdés/választ (az Erdélyben használt revideált Tavaszy fordítás szerint), az igei részhez választott igehelyet, a fókuszt, rövid leírását az óra üzenetének, valamint egy rövid bemutatását annak, milyen helyzetben szólítja meg fiataljainkat ez a téma.
+                II. óraterv- mely az óra menetét írja le. Az óra imádsággal és énekléssel kezdődik. A bevezető gyakorlat egy játék, feladat vagy beszélgetés, amelynek során a csoportvezető számára világossá válik, hogyan közelítik meg a fiatalok az aznap megbeszélendő témát. Ez a gyakorlat segít csatlakozni a fiatalokhoz és az ő kérdéseikhez a téma kapcsán.
+                Ezt követi a bibliatanulmányozó rész, amely általában szintén beszélgetős, s gyakran egyéni feladatot is tartalmaz, majd ehhez kapcsolódik a káté kérdés/ válasz üzenetének a rövid megfogalmazása. Érdekesség, hogy a válasznak a fókuszhoz kapcsolódó üzenetére tekint a terv. A válaszban található többi üzenetet nem taglalja.
+                Az alkalmazó gyakorlat abban segít, hogy a fiatalok saját életükre alkalmazzák az aznap hallottakat és kipróbálják, hogy mit változtat az életükön az aznap hallott üzenet gyakorlatba ültetése.
+                Az óra imádsággal énekléssel és áldással zárul.
+            </p>
+        </section>
+
+        <!-- Próbáld ki -->
+        <section id="probaldkid" class="tab-content">
+            <h2>Próbáld ki!</h2>
+            <p>Az alábbi linkre kattintva elolvashatod az első év első óraterveit.
+                <a href="https://drive.google.com/drive/folders/1SEm35PGFl684mGcWG94DX3evjOpQxHWJ?usp=sharing" target="_blank">Megtekintés</a>
+                Szeretnéd az egész anyagot megkapni? Vedd fel a kapcsolatot a Kapcsolat menüpont alatti elérhetőségeken valamelyik munkatársunkkal. Ugyanitt várjuk visszajelzéseidet is.
+                
+                Megjegyzések:
+                - Még dolgozunk az óraterveken. Örömmel fogadjuk a meglátásokat, javaslatokat. Kérünk, írjatok nekünk.
+                - Az óratervek a magyar református gyülekezetek használatára íródtak. Természetesen más gyülekezetek számára is hasznos lehet. Bátorítunk használatára.
+                - A program irányítói szeretnék tudni, ki is használja a segédletet. Ezért van szükség arra, hogy jelentkezzetek ahhoz, hogy elküldjük az egészet.
+            </p>
+        </section>
+
+        <!-- 6. Események teljes lista -->
+        <section id="esemenyek" class="tab-content">
+            <h2>Események és Alkalmak</h2>
+            
+            <div class="events-section">
+                <h3>Közelgő események</h3>
+                <div id="allUpcomingEvents" class="events-grid"></div>
+            </div>
+
+            <div class="events-section past-events-section">
+                <h3>Múltbéli / Lejárt események</h3>
+                <div id="allPastEvents" class="events-grid past-grid"></div>
+            </div>
+        </section>
+
+        <!-- 7. Galéria -->
+        <section id="galeria" class="tab-content">
+            <h2>Galéria</h2>
+            <div id="galleryGrid" class="gallery-grid"></div>
+        </section>
+
+        <!-- 8. Kapcsolat -->
+        <section id="kapcsolat" class="tab-content">
+            <h2>Kapcsolat</h2>
+            <p>
+                Dr. Somfalvi Edit teológiai tanár: <a href="mailto:somfalviedit@proteo.hu">somfalviedit@proteo.hu</a><br>
+                Pitó Zsolt lelkipásztor, koordinátor: <a href="mailto:katem.kapcsolat@gmail.com">katem.kapcsolat@gmail.com</a><br>
+                Dr. Bernard van Vreeswijk lelkipásztor, ifjúsági munkás: <a href="mailto:bjd@vanvreeswijk.nl">bjd@vanvreeswijk.nl</a>
+            </p>
+        </section>
+
+        <!-- 9. Szervezői Admin Felület -->
+        <section id="admin" class="tab-content">
+            <h2>⚙️ Szervezői Adminisztráció</h2>
+            <div id="adminPanel">
+                <div class="admin-grid">
+                    <!-- Új esemény felvétele -->
+                    <div class="admin-card">
+                        <h3>➕ Új esemény hozzáadása</h3>
+                        <form id="newEventForm">
+                            <div class="form-group">
+                                <label>Esemény neve:</label>
+                                <input type="text" id="eventTitle" required placeholder="pl. Istentisztelet / Konferencia">
+                            </div>
+                            <div class="form-group">
+                                <label>Dátum és időpont:</label>
+                                <input type="datetime-local" id="eventDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Leírás:</label>
+                                <textarea id="eventDescription" rows="3" placeholder="Esemény részletei..."></textarea>
+                            </div>
+                            <button type="submit" class="btn">Esemény mentése</button>
+                        </form>
+                    </div>
+
+                    <!-- Új kép feltöltése a Galériába -->
+                    <div class="admin-card">
+                        <h3>🖼️ Új kép feltöltése a Galériába</h3>
+                        <form id="newImageForm">
+                            <div class="form-group">
+                                <label>Kép kiválasztása:</label>
+                                <input type="file" id="imageFile" accept="image/*" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Kép leírása / címe:</label>
+                                <input type="text" id="imageCaption" placeholder="pl. Nyári tábor 2026">
+                            </div>
+                            <button type="submit" class="btn">Kép feltöltése</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Új szervezők jóváhagyása -->
+                <div class="admin-card full-width-card">
+                    <h3>👥 Új szervezők jóváhagyása</h3>
+                    <div id="pendingUsersList">
+                        <p>Nincs jóváhagyásra váró regisztráció.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. Hibabejelentő -->
+        <section id="hibabejelentes" class="tab-content">
+            <h2>Weboldallal kapcsolatos probléma jelentése</h2>
+            <form id="issueForm">
+                <div class="form-group">
+                    <label for="reporterEmail">E-mail címed:</label>
+                    <input type="email" id="reporterEmail" required placeholder="pelda@email.hu">
+                </div>
+                <div class="form-group">
+                    <label for="issueType">Probléma típusa:</label>
+                    <select id="issueType">
+                        <option value="hibas_link">Nem működő gomb / hibás link</option>
+                        <option value="megjelenes">Megjelenési / dizájn hiba</option>
+                        <option value="tartalom">Tartalmi hiba</option>
+                        <option value="egyeb">Egyéb</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="issueDescription">Probléma leírása:</label>
+                    <textarea id="issueDescription" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Bejelentés küldése</button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- Bejelentkezés Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" id="loginTabBtn">Bejelentkezés</button>
+                <button class="auth-tab-btn" id="registerTabBtn">Regisztráció</button>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label>E-mail cím:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Jelszó:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn">Belépés</button>
+            </form>
+
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label>E-mail cím:</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Jelszó:</label>
+                    <input type="password" id="regPassword" required minlength="6">
+                </div>
+                <p class="auth-info-text">⚠️ A regisztráció után egy már meglévő szervezőnek jóvá kell hagynia a fiókodat a belépéshez!</p>
+                <button type="submit" class="btn">Regisztráció küldése</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lebegő gombok -->
+    <button id="openAuthModalBtn" class="floating-auth-btn">
+        🔑 Szervezői belépés
+    </button>
+
+    <button class="floating-report-btn nav-btn" data-target="hibabejelentes">
+        ⚠️ Probléma jelentése
+    </button>
+
+    <!-- FIREBASE & SCRIPT BETÖLTÉSE MODULE TÍPUSKÉNT -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
