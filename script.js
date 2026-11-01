@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, updateDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
 // Firebase konfiguráció
@@ -21,6 +21,42 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    let isCurrentEditor = false;
+
+    // === LIGHTBOX (KÉPNAGYÍTÓ) KEZELÉSE ===
+    const lightboxModal = document.getElementById('imageLightboxModal');
+    const lightboxImg = document.getElementById('lightboxImage');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    function openLightbox(url, caption) {
+        if (!lightboxModal || !lightboxImg) return;
+        lightboxImg.src = url;
+        if (lightboxCaption) lightboxCaption.textContent = caption || '';
+        lightboxModal.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+        if (!lightboxModal || !lightboxImg) return;
+        lightboxModal.style.display = 'none';
+        lightboxImg.src = '';
+        if (lightboxCaption) lightboxCaption.textContent = '';
+    }
+
+    if (lightboxClose) lightboxClose.onclick = closeLightbox;
+    if (lightboxModal) {
+        lightboxModal.onclick = (e) => {
+            if (e.target === lightboxModal || e.target.classList.contains('lightbox-content-wrapper')) {
+                closeLightbox();
+            }
+        };
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightboxModal && lightboxModal.style.display === 'flex') {
+            closeLightbox();
+        }
+    });
 
     // === 1. NAVIGÁCIÓ KEZELÉSE ===
     const navButtons = document.querySelectorAll('.nav-btn');
@@ -82,15 +118,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                const MY_ADMIN_EMAIL = "panna.pito33@gmail.com";
-                const isApproved = (email.toLowerCase() === MY_ADMIN_EMAIL.toLowerCase());
-
                 await setDoc(doc(db, "profiles", user.uid), {
                     email: email,
-                    is_approved: isApproved
+                    is_approved: false
                 });
 
-                alert(isApproved ? 'Sikeres regisztráció! Adminisztrátorként azonnal beléphetsz.' : 'Sikeres regisztráció! Jóváhagyásra vár a fiókod.');
+                alert('Sikeres regisztráció! A fiókod jóváhagyásra vár a szervezőknél.');
                 registerForm.reset();
                 if (authModal) authModal.style.display = 'none';
             } catch (error) {
@@ -99,8 +132,56 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // === BEJELENTKEZÉSI ÁLLAPOT ÉS JOGOSULTSÁG FIGYELÉSE ===
+    onAuthStateChanged(auth, async (user) => {
+        const adminBtn = document.getElementById('adminNavBtn');
+        const openAuthBtn = document.getElementById('openAuthModalBtn');
+
+        if (user) {
+            try {
+                const profileRef = doc(db, "profiles", user.uid);
+                const profileDoc = await getDoc(profileRef);
+
+                if (profileDoc.exists() && profileDoc.data().is_approved) {
+                    isCurrentEditor = true;
+                    if (adminBtn) adminBtn.style.display = 'inline-block';
+                    if (openAuthBtn) {
+                        const shortEmail = user.email ? user.email.split('@')[0] : 'Szervező';
+                        openAuthBtn.textContent = `🚪 Kijelentkezés (${shortEmail})`;
+                        openAuthBtn.onclick = async () => {
+                            if (confirm('Biztosan ki szeretnél jelentkezni?')) {
+                                await signOut(auth);
+                                alert('Sikeresen kijelentkeztél!');
+                            }
+                        };
+                    }
+                    loadPendingUsers();
+                } else {
+                    isCurrentEditor = false;
+                    if (adminBtn) adminBtn.style.display = 'none';
+                    if (openAuthBtn) {
+                        openAuthBtn.textContent = '🔑 Szervezői belépés';
+                        openAuthBtn.onclick = () => { if (authModal) authModal.style.display = 'block'; };
+                    }
+                }
+            } catch (err) {
+                console.error("Profil lekérési hiba:", err);
+                isCurrentEditor = false;
+            }
+        } else {
+            isCurrentEditor = false;
+            if (adminBtn) adminBtn.style.display = 'none';
+            if (openAuthBtn) {
+                openAuthBtn.textContent = '🔑 Szervezői belépés';
+                openAuthBtn.onclick = () => { if (authModal) authModal.style.display = 'block'; };
+            }
+        }
+
+        // Galéria újratöltése a friss jogosultságok alapján
+        loadGallery();
+    });
+
     // === 4. BEJELENTKEZÉS ===
-    // === 4. BEJELENTKEZÉS (PONTOS HIBAKEZELÉSSEL) ===
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -114,21 +195,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // 2. Profil lekérése Firestore-ból
                 const profileRef = doc(db, "profiles", user.uid);
-                let profileDoc = await getDoc(profileRef);
-
-                // Ha a saját admin e-mail címed, de valamiért nem volt 'is_approved', frissítjük!
-                const MY_ADMIN_EMAIL = "panna.pito33@gmail.com";
-                if (email.toLowerCase() === MY_ADMIN_EMAIL.toLowerCase()) {
-                    await setDoc(profileRef, { email: email, is_approved: true }, { merge: true });
-                    profileDoc = await getDoc(profileRef);
-                }
+                const profileDoc = await getDoc(profileRef);
 
                 if (profileDoc.exists() && profileDoc.data().is_approved) {
                     alert('Sikeres bejelentkezés!');
                     if (authModal) authModal.style.display = 'none';
-                    const adminBtn = document.getElementById('adminNavBtn');
-                    if (adminBtn) adminBtn.style.display = 'inline-block';
-                    loadPendingUsers();
+                    loginForm.reset();
                 } else {
                     alert('A fiókod még jóváhagyásra vár a szervezőknél!');
                     await signOut(auth);
@@ -136,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error("Bejelentkezési hiba részletei:", error);
                 
-                // Pontos magyar hibaüzenetek
                 if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
                     alert('Hibás jelszót adtál meg!');
                 } else if (error.code === 'auth/user-not-found') {
@@ -262,8 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    // === 7. GALÉRIA BETÖLTÉSE ÉS KÉP FELTÖLTÉSE (LEGÚJABB ELŐL) ===
-    // === 7. GALÉRIA BETÖLTÉSE ÉS KÉP FELTÖLTÉSE (TÖRLESI LEHETŐSÉGGEL) ===
+    // === 7. GALÉRIA BETÖLTÉSE (EGYFORMA KÉPEK, NAGYÍTÁS ÉS BIZTONSÁGOS TÖRLÉS) ===
     async function loadGallery() {
         try {
             const q = query(collection(db, "gallery"), orderBy("created_at", "asc"));
@@ -277,44 +347,60 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const currentUser = auth.currentUser; // Ellenőrizzük, hogy be van-e lépve az admin
-
             querySnapshot.forEach((imgDoc) => {
                 const img = imgDoc.data();
                 const docId = imgDoc.id;
 
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'gallery-item-card';
-                cardDiv.style.cssText = 'position: relative; display: inline-block; margin: 0.5rem;';
 
+                // Törlés gomb CSAK jóváhagyott szerkesztőknek
                 let deleteBtnHTML = '';
-                if (currentUser) {
-                    deleteBtnHTML = `<button class="delete-img-btn" data-id="${docId}" style="position: absolute; top: 8px; right: 8px; background: rgba(220, 38, 38, 0.85); color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem;">🗑️ Törlés</button>`;
+                if (isCurrentEditor) {
+                    deleteBtnHTML = `<button class="delete-img-btn" data-id="${docId}" title="Kép törlése">🗑️ Törlés</button>`;
+                }
+
+                let captionOverlayHTML = '';
+                if (img.caption && img.caption.trim()) {
+                    captionOverlayHTML = `<div class="gallery-caption-overlay">${img.caption}</div>`;
                 }
 
                 cardDiv.innerHTML = `
-                    <img src="${img.image_url}" alt="${img.caption || 'Galéria kép'}" title="${img.caption || ''}" style="max-width: 100%; height: auto; border-radius: 8px;">
+                    <img src="${img.image_url}" alt="${img.caption || 'Galéria kép'}" class="gallery-thumb" loading="lazy">
+                    ${captionOverlayHTML}
                     ${deleteBtnHTML}
                 `;
 
-                galleryGrid.appendChild(cardDiv);
-            });
-
-            // Törlés gombok eseménykezelője
-            document.querySelectorAll('.delete-img-btn').forEach(btn => {
-                btn.onclick = async () => {
-                    if (confirm('Biztosan törölni szeretnéd ezt a képet a galériából?')) {
-                        const id = btn.getAttribute('data-id');
-                        try {
-                            const { deleteDoc, doc } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
-                            await deleteDoc(doc(db, "gallery", id));
-                            alert('Kép sikeresen törölve!');
-                            loadGallery();
-                        } catch (err) {
-                            alert('Hiba a törlés során: ' + err.message);
-                        }
-                    }
+                // Kattintásra a kép megnyitása nagy méretben
+                cardDiv.onclick = (e) => {
+                    if (e.target.closest('.delete-img-btn')) return;
+                    openLightbox(img.image_url, img.caption);
                 };
+
+                // Törlés gomb eseménykezelő
+                const deleteBtn = cardDiv.querySelector('.delete-img-btn');
+                if (deleteBtn) {
+                    deleteBtn.onclick = async (e) => {
+                        e.stopPropagation(); // Ne nyissa meg a képet nagyban
+
+                        if (!isCurrentEditor) {
+                            alert('Csak szerkesztői jogosultsággal törölhetsz képet!');
+                            return;
+                        }
+
+                        if (confirm('Biztosan törölni szeretnéd ezt a képet a galériából?')) {
+                            try {
+                                await deleteDoc(doc(db, "gallery", docId));
+                                alert('Kép sikeresen törölve!');
+                                loadGallery();
+                            } catch (err) {
+                                alert('Hiba a törlés során: ' + err.message);
+                            }
+                        }
+                    };
+                }
+
+                galleryGrid.appendChild(cardDiv);
             });
 
         } catch (error) {
